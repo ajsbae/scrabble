@@ -8,14 +8,12 @@
 // n - the number of times to repeat the value
 // Returns:
 // an Array containing n elements, with each element being value
-
 function repeat(value, n) {
-	var board = {};
-    for (i = 0; i < totalSpaces ; i++) {
-    	board.push(value);
+    var board = [];
+    for (i = 0; i < n; i++) {
+        board.push(value);
     }
     return board;
-
 }
 
 // Parameters:
@@ -26,7 +24,9 @@ function repeat(value, n) {
 // a single dimensional Array containing the number of elements that would be in a rows x columns board… 
 // with each cell containing the initial value, initialCellValue
 function generateBoard(rows, columns, initialCellValue) {
-
+    var totalSpaces = rows * columns;
+    var board = repeat(initialCellValue, totalSpaces);
+    return board;
 }
 
 // Parameters:
@@ -36,7 +36,8 @@ function generateBoard(rows, columns, initialCellValue) {
 // Returns:
 // a Number, the index that's mapped to by the given rowNumber and columnNumber
 function rowColToIndex(board, rowNumber, columnNumber) {
-
+    var rowSize = Math.sqrt(board.length);
+    return rowNumber * rowSize + columnNumber;
 }
 
 
@@ -47,8 +48,15 @@ function rowColToIndex(board, rowNumber, columnNumber) {
 // Returns:
 // an object containing two properties, row and col, representing the row and column numbers that the index maps to
 function indexToRowCol(board, i) {
-
-
+    var rowSize = Math.sqrt(board.length);
+    var rowNumber = Math.floor(i / rowSize);
+    var RowCol = {
+        row: "0",
+        col: "0",
+    };
+    RowCol.row = rowNumber;
+    RowCol.col = i - (rowNumber * rowSize);
+    return RowCol;
 }
 
 
@@ -61,6 +69,10 @@ function indexToRowCol(board, i) {
 // a single dimensional Array representing the board where the cell at row and col is set to the value of letter
 
 function setBoardCell(board, letter, row, col) {
+    var index = rowColToIndex(board, row, col);
+    var boardTemp = board.slice(0, board.length);
+    boardTemp.splice(index, 1, letter);
+    return boardTemp;
 
 }
 
@@ -71,6 +83,31 @@ function setBoardCell(board, letter, row, col) {
 // an object containing two properties, row and col, representing the row and column numbers that the algebraicNotation maps to (for example, {"row": 1, "col": 1})
 // undefined if the algebraic notation passed in is not valid.
 function algebraicToRowCol(algebraicNotation) {
+    var letters = ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z"];
+    var firstChar = algebraicNotation.charAt(0);
+    var secondChar = algebraicNotation.charAt(1);
+    var thirdChar = algebraicNotation.charAt(2);
+    var RowCol = {
+        row: "0",
+        col: "0",
+    };
+    if (!(firstChar.match(/[a-z]/i))) {
+        return undefined;
+    } else {
+        for (i = 0; i < letters.length; i++) {
+            if (firstChar === letters[i]) {
+                RowCol.row = i;
+            }
+        }
+    }
+    if (!(secondChar.match(/[1-2]/i)) && !(secondChar.match(/[1-6]/i))) {
+        return undefined;
+    } else {
+        var numberString = secondChar + thirdChar;
+
+        RowCol.col = numberString - 1;
+    }
+    return RowCol;
 
 }
 
@@ -83,6 +120,13 @@ function algebraicToRowCol(algebraicNotation) {
 // Returns:
 // a single dimensional Array representing the board where the cell at row and col is set to the value of letter
 function placeLetter(board, letter, algebraicNotation) {
+    var RowCol = algebraicToRowCol(algebraicNotation);
+    var row = RowCol.row;
+    var col = RowCol.col;
+    var rowSize = Math.sqrt(board.length);
+    board[row * rowSize + col] = letter;
+    return board;
+
 
 }
 
@@ -104,6 +148,35 @@ function boardToString(board) {
 // Returns:
 // the letter of the winning player or undefined if there is no winner yet (based on rows)
 function getWinnerRows(board) {
+
+
+    var winner = false
+    var rowSize = Math.sqrt(board.length);
+    var winningLetter = undefined;
+
+
+    for(var startRow = 0; startRow <  board.length; startRow = startRow + rowSize){
+    	if(board[startRow] != " "){
+    		winningLetter = board[startRow];
+    	}
+    	var counter = 0;
+    	winner = true;
+    	console.log("here" + startRow);
+    	while(startRow + counter < startRow + rowSize) {
+    		
+    		if(board[startRow + counter] != winningLetter){
+    			winner = false;
+    		}
+    		console.log(winner);
+    		counter++;
+    	}
+
+    	if(winner){
+    		return winningLetter;
+    	}
+
+    }
+    return undefined;
 
 }
 
@@ -132,7 +205,12 @@ function getWinnerDiagonals(board) {
 // Returns:
 // true if there are no empty cells left in the board, false otherwise
 function isBoardFull(board) {
-
+    for (var i = 0; i < board.length; i++) {
+        if (board[i] === " ") {
+            return false;
+        }
+    }
+    return true;
 }
 
 
@@ -144,8 +222,13 @@ function isBoardFull(board) {
 // col - the column number of the move
 // Returns:
 // true if the move is valid, false otherwise
-function isValidMove(board, row, col) {
-
+function isValidMove(board, row, col ) {
+	if(row * col > board.length || board[row*col] != " "){
+		return false;
+	}
+	else{
+		return true;
+	}
 
 }
 
@@ -155,7 +238,9 @@ function isValidMove(board, row, col) {
 // algebraicNotation - algebraic notation representing a move on the board
 // Returns:
 // true if the move is valid, false otherwise
-function isValidMoveAlgebraicNotation(board, algebraicNotation) {}
+function isValidMoveAlgebraicNotation(board, algebraicNotation) {
+
+}
 
 
 
@@ -167,4 +252,24 @@ function isValidMoveAlgebraicNotation(board, algebraicNotation) {}
 function getRandomEmptyCellIndex(board) {
 
 
+}
+
+
+
+module.exports = {
+    repeat: repeat,
+    generateBoard: generateBoard,
+    rowColToIndex: rowColToIndex,
+    indexToRowCol: indexToRowCol,
+    setBoardCell: setBoardCell,
+    algebraicToRowCol: algebraicToRowCol,
+    placeLetter: placeLetter,
+    boardToString: boardToString,
+    getWinnerRows: getWinnerRows,
+    getWinnerCols: getWinnerCols,
+    getWinnerDiagonals: getWinnerDiagonals,
+    isBoardFull: isBoardFull,
+    isValidMove: isValidMove,
+    isValidMoveAlgebraicNotation: isValidMoveAlgebraicNotation,
+    getRandomEmptyCellIndex: getRandomEmptyCellIndex,
 }
