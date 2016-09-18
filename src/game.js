@@ -18,14 +18,51 @@ while (!rowSize < 27 && !rowSize > 0) {
 }
 
 var letter = readlineSync.question('Pick your letter: X or O');
-while (letter != 'X' && letter != 'O'){
+while (letter != 'X' && letter != 'O') {
 
-    letter = readlineSync.question('Pick your letter: X or O');
+    letter = readlineSync.question('Pick your letter: X or O ');
 
 }
+console.log('Player is ' + letter);
 
 var board = tic.generateBoard(rowSize, rowSize, " ");
-tic.boardToString(board);
+console.log(tic.boardToString(board));
+var computerLetter;
+if (letter == 'O') {
+    computerLetter = 'X';
+    var computerMoveText = readlineSync.question('Press <ENTER> to show computer\'s move...');
+    var computerMove = tic.getRandomEmptyCellIndex(board);
+    board[computerMove] = computerLetter;
+    console.log(tic.boardToString(board));
+} else {
+    computerLetter = 'O';
+}
+// console.log(tic.getWinnerRows(board));
+while (!(tic.checkWinner(board))) {
+    var move = readlineSync.question('What\'s your move');
+    while (!tic.isValidMoveAlgebraicNotation(board, move)) {
+        move = readlineSync.question('Your move must be in a format, and it must specify an existing empty cell! What\'s your move?');
+    }
+    tic.placeLetter(board, letter, move);
+    if(tic.checkWinner(board)){
+    	break;
+    }
+    console.log(tic.boardToString(board));
+    var computerMoveText = readlineSync.question('Press <ENTER> to show computer\'s move...');
+    var computerMove = tic.getRandomEmptyCellIndex(board);
+    board[computerMove] = computerLetter;
+    console.log(tic.boardToString(board));
+}
+if(tic.checkWinner(board) === computerLetter){
+	console.log("Computer won!!!");
+}
+else if (tic.checkWinner(board) === letter){
+	console.log("Player won!!!");
+}
+else
+{
+	console.log("It's a draw")
+}
 
 
-while()
+

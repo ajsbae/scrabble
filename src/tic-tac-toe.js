@@ -165,9 +165,9 @@ function boardToString(board) {
 
         var tempRow = [];
         for (var j = 0; j < rowSize; j++) {
-        
+
             tempRow.push(board[i * rowSize + j]);
-            
+
             if (j === rowSize - 1) {
                 for (var x = 0; x < tempRow.length + 1; x++) {
                     if (tempRow[x] != undefined) {
@@ -183,7 +183,7 @@ function boardToString(board) {
         printBoard = printBoard + "\n";
         printBoard = printBoard + hr + "\n";
     }
-    console.log(printBoard);
+
     return printBoard;
 
 }
@@ -347,10 +347,10 @@ function isBoardFull(board) {
 // true if the move is valid, false otherwise
 function isValidMove(board, row, col) {
     var rowSize = Math.sqrt(board.length);
-    if (row * col > board.length || board[row * rowSize + col] != " ") {
-        return false;
-    } else {
+    if (row < rowSize && col < rowSize && board[row * rowSize + col] === " ") {
         return true;
+    } else {
+        return false;
     }
 
 }
@@ -364,20 +364,17 @@ function isValidMove(board, row, col) {
 function isValidMoveAlgebraicNotation(board, algebraicNotation) {
     var rowSize = Math.sqrt(board.length);
     var RowCol = algebraicToRowCol(algebraicNotation);
-    var row = RowCol.row;
-    var col = RowCol.col;
-
-
-    if (row * col > board.length || board[row * rowSize + col] != " ") {
+    if (RowCol === undefined) {
         return false;
-    } else {
-        return true;
     }
 
+    var row = RowCol.row;
+    var col = RowCol.col;
+    return isValidMove(board, row, col);
+    return false;
+
+
 }
-
-
-
 
 // Parameters:
 // board - the board to get an empty cell from
@@ -390,16 +387,28 @@ function getRandomEmptyCellIndex(board) {
             emptyCells.push(i);
         }
     }
-    if (emptyCells.length = 1) {
+    if (emptyCells.length === 1) {
         return emptyCells[0];
     }
+    
     var randomInEmpty = Math.floor(Math.random() * (emptyCells.length + 1));
-
+    console.log(emptyCells[randomInEmpty]);
     return emptyCells[randomInEmpty];
 
 }
 
+function checkWinner(board) {
+    if (getWinnerRows(board) != undefined) {
+        return getWinnerRows(board);
+    } else if (getWinnerCols(board) != undefined) {
+        return getWinnerCols(board);
+    } else if (getWinnerDiagonals(board) != undefined) {
+        return getWinnerDiagonals(board);
+    } else {
+        return false;
+    }
 
+}
 
 module.exports = {
     repeat: repeat,
@@ -417,4 +426,5 @@ module.exports = {
     isValidMove: isValidMove,
     isValidMoveAlgebraicNotation: isValidMoveAlgebraicNotation,
     getRandomEmptyCellIndex: getRandomEmptyCellIndex,
+    checkWinner : checkWinner
 }
