@@ -138,6 +138,53 @@ function placeLetter(board, letter, algebraicNotation) {
 // Returns:
 // a String representation of the board
 function boardToString(board) {
+    var rowSize = Math.sqrt(board.length);
+    var letters = ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z"];
+    var printBoard = "   ";
+    var hr = "   ";
+
+
+
+    for (var i = 0; i < rowSize; i++) {
+        var tempLabel = i + 1
+        if (i === 0)
+            printBoard = printBoard + "  " + tempLabel;
+        else {
+            printBoard = printBoard + "   " + tempLabel;
+        }
+    }
+
+
+    for (var i = 0; i < rowSize; i++) {
+        hr = hr + "+---";
+    }
+    hr = hr + "+";
+    printBoard = printBoard + "\n" + hr + "\n";
+    for (var i = 0; i < rowSize; i++) {
+        printBoard = printBoard + " " + letters[i] + " ";
+
+        var tempRow = [];
+        for (var j = 0; j < rowSize; j++) {
+        
+            tempRow.push(board[i * rowSize + j]);
+            
+            if (j === rowSize - 1) {
+                for (var x = 0; x < tempRow.length + 1; x++) {
+                    if (tempRow[x] != undefined) {
+                        printBoard = printBoard + "|" + " " + tempRow[x] + " ";
+                    }
+
+                }
+                printBoard = printBoard + "|"
+            }
+        }
+
+
+        printBoard = printBoard + "\n";
+        printBoard = printBoard + hr + "\n";
+    }
+    console.log(printBoard);
+    return printBoard;
 
 }
 
@@ -155,25 +202,21 @@ function getWinnerRows(board) {
     var winningLetter = undefined;
 
 
-    for(var startRow = 0; startRow <  board.length; startRow = startRow + rowSize){
-    	if(board[startRow] != " "){
-    		winningLetter = board[startRow];
-    	}
-    	var counter = 0;
-    	winner = true;
-    	console.log("here" + startRow);
-    	while(startRow + counter < startRow + rowSize) {
-    		
-    		if(board[startRow + counter] != winningLetter){
-    			winner = false;
-    		}
-    		console.log(winner);
-    		counter++;
-    	}
-
-    	if(winner){
-    		return winningLetter;
-    	}
+    for (var startRow = 0; startRow < board.length; startRow = startRow + rowSize) {
+        if (board[startRow] != " ") {
+            winningLetter = board[startRow];
+        }
+        var counter = 0;
+        winner = true;
+        while (startRow + counter < startRow + rowSize) {
+            if (board[startRow + counter] != winningLetter) {
+                winner = false;
+            }
+            counter++;
+        }
+        if (winner) {
+            return winningLetter;
+        }
 
     }
     return undefined;
@@ -187,7 +230,31 @@ function getWinnerRows(board) {
 // board - the board to examine for a winner
 // Returns:
 // the letter of the winning player or undefined if there is no winner yet (based on columns)
-function getWinnerCols(board) {}
+function getWinnerCols(board) {
+    var rowSize = Math.sqrt(board.length);
+    var winner = true;
+    var winningLetter;
+
+    for (var i = 0; i < rowSize; i++) {
+        for (var j = 0; j < board.length; j = j + rowSize) {
+            if (board[i] != " ") {
+                winningLetter = board[i];
+            }
+            if (board[i + j] != winningLetter) {
+                winner = false;
+            }
+        }
+        if (winner === true) {
+
+            return winningLetter;
+        }
+        winner = true;
+    }
+    return undefined;
+
+
+
+}
 
 
 // Parameters:
@@ -195,9 +262,65 @@ function getWinnerCols(board) {}
 // Returns:
 // the letter of the winning player or undefined if there is no winner yet (based on diagonals)
 function getWinnerDiagonals(board) {
+    var major = majorDiagonal(board);
+    var minor = minorDiagonal(board);
 
+    if (major != undefined || minor != undefined) {
+        if (major != undefined) {
+            return major;
+        }
+        if (minor != undefined) {
+            return minor;
+        }
+    } else {
+        return minor;
+    }
 }
 
+
+function majorDiagonal(board) {
+    var rowSize = Math.sqrt(board.length);
+    var winningLetter = undefined;
+    var winner = true;
+    var index = 0;
+    if (board[index] != " ") {
+        winningLetter = board[index];
+    }
+    while (index + rowSize + 1 < board.length) {
+        if (board[index] != winningLetter) {
+            winner = undefined;
+        }
+        index = index + rowSize + 1;
+    }
+    if (winner) {
+        return winningLetter;
+    } else {
+        return undefined;
+    }
+}
+
+
+function minorDiagonal(board) {
+    var rowSize = Math.sqrt(board.length);
+    var winningLetter = undefined;
+    var winner = true;
+    var index = rowSize - 1;
+    if (board[index] != " ") {
+        winningLetter = board[index];
+    }
+    while (index + rowSize - 1 < board.length) {
+        if (board[index] != winningLetter) {
+            winner = undefined;
+        }
+        index = index + rowSize - 1;
+    }
+
+    if (winner) {
+        return winningLetter;
+    } else {
+        return undefined;
+    }
+}
 
 
 // Parameters:
@@ -222,13 +345,13 @@ function isBoardFull(board) {
 // col - the column number of the move
 // Returns:
 // true if the move is valid, false otherwise
-function isValidMove(board, row, col ) {
-	if(row * col > board.length || board[row*col] != " "){
-		return false;
-	}
-	else{
-		return true;
-	}
+function isValidMove(board, row, col) {
+    var rowSize = Math.sqrt(board.length);
+    if (row * col > board.length || board[row * rowSize + col] != " ") {
+        return false;
+    } else {
+        return true;
+    }
 
 }
 
@@ -239,6 +362,17 @@ function isValidMove(board, row, col ) {
 // Returns:
 // true if the move is valid, false otherwise
 function isValidMoveAlgebraicNotation(board, algebraicNotation) {
+    var rowSize = Math.sqrt(board.length);
+    var RowCol = algebraicToRowCol(algebraicNotation);
+    var row = RowCol.row;
+    var col = RowCol.col;
+
+
+    if (row * col > board.length || board[row * rowSize + col] != " ") {
+        return false;
+    } else {
+        return true;
+    }
 
 }
 
@@ -250,7 +384,18 @@ function isValidMoveAlgebraicNotation(board, algebraicNotation) {
 // Returns:
 // index of an empty square on the board, undefined if the board is full
 function getRandomEmptyCellIndex(board) {
+    var emptyCells = []
+    for (var i = 0; i < board.length; i++) {
+        if (board[i] === " ") {
+            emptyCells.push(i);
+        }
+    }
+    if (emptyCells.length = 1) {
+        return emptyCells[0];
+    }
+    var randomInEmpty = Math.floor(Math.random() * (emptyCells.length + 1));
 
+    return emptyCells[randomInEmpty];
 
 }
 
