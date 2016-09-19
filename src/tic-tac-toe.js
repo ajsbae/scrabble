@@ -286,7 +286,8 @@ function majorDiagonal(board) {
     if (board[index] != " ") {
         winningLetter = board[index];
     }
-    while (index + rowSize + 1 < board.length) {
+    while (index< board.length) {
+        
         if (board[index] != winningLetter) {
             winner = undefined;
         }
@@ -308,7 +309,8 @@ function minorDiagonal(board) {
     if (board[index] != " ") {
         winningLetter = board[index];
     }
-    while (index + rowSize - 1 < board.length) {
+    while (index < board.length) {
+        
         if (board[index] != winningLetter) {
             winner = undefined;
         }
@@ -391,19 +393,25 @@ function getRandomEmptyCellIndex(board) {
         return emptyCells[0];
     }
     
-    var randomInEmpty = Math.floor(Math.random() * (emptyCells.length + 1));
-    console.log(emptyCells[randomInEmpty]);
+    var randomInEmpty = Math.floor(Math.random() * (emptyCells.length ));
+    
     return emptyCells[randomInEmpty];
 
 }
 
 function checkWinner(board) {
     if (getWinnerRows(board) != undefined) {
+        console.log("here");
         return getWinnerRows(board);
+        
     } else if (getWinnerCols(board) != undefined) {
+        console.log("here2");
         return getWinnerCols(board);
+        
     } else if (getWinnerDiagonals(board) != undefined) {
+        console.log("here3");
         return getWinnerDiagonals(board);
+        
     } else {
         return false;
     }
