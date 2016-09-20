@@ -91,8 +91,11 @@ function algebraicToRowCol(algebraicNotation) {
         row: "0",
         col: "0",
     };
+ 
     if (!(firstChar.match(/[a-z]/i))) {
+        
         return undefined;
+        
     } else {
         for (i = 0; i < letters.length; i++) {
             if (firstChar === letters[i]) {
@@ -100,7 +103,8 @@ function algebraicToRowCol(algebraicNotation) {
             }
         }
     }
-    if (!(secondChar.match(/[1-2]/i)) && !(secondChar.match(/[1-6]/i))) {
+    if (!(secondChar.match(/[1-2]/i)) && !(secondChar.match(/[1-9]/i))) {
+        console.log("here");
         return undefined;
     } else {
         var numberString = secondChar + thirdChar;
@@ -285,14 +289,15 @@ function majorDiagonal(board) {
     var index = 0;
     if (board[index] != " ") {
         winningLetter = board[index];
+        
     }
     while (index< board.length) {
-        
         if (board[index] != winningLetter) {
             winner = undefined;
         }
         index = index + rowSize + 1;
     }
+    
     if (winner) {
         return winningLetter;
     } else {
@@ -308,8 +313,10 @@ function minorDiagonal(board) {
     var index = rowSize - 1;
     if (board[index] != " ") {
         winningLetter = board[index];
+        
     }
-    while (index < board.length) {
+
+    while ( index + rowSize - 1< board.length && board.length != 1) {
         
         if (board[index] != winningLetter) {
             winner = undefined;
@@ -349,6 +356,7 @@ function isBoardFull(board) {
 // true if the move is valid, false otherwise
 function isValidMove(board, row, col) {
     var rowSize = Math.sqrt(board.length);
+
     if (row < rowSize && col < rowSize && board[row * rowSize + col] === " ") {
         return true;
     } else {
@@ -369,7 +377,6 @@ function isValidMoveAlgebraicNotation(board, algebraicNotation) {
     if (RowCol === undefined) {
         return false;
     }
-
     var row = RowCol.row;
     var col = RowCol.col;
     return isValidMove(board, row, col);
@@ -401,11 +408,9 @@ function getRandomEmptyCellIndex(board) {
 
 function checkWinner(board) {
     if (getWinnerRows(board) != undefined) {
-        
         return getWinnerRows(board);
         
     } else if (getWinnerCols(board) != undefined) {
-        
         return getWinnerCols(board);
         
     } else if (getWinnerDiagonals(board) != undefined) {
