@@ -9,7 +9,7 @@ var readlineSync = require('readline-sync');
 
 
 
-console.log('Shall we play a game of TIC TAC TOE?')
+console.log('Shall we play a game? TIC TAC TOE!')
 
 var rowSize = readlineSync.question('How wide should the board be? (1-26)')
 while ( rowSize > 26 || rowSize < 1) {
@@ -54,13 +54,16 @@ while (!tic.checkWinner(board) && !tic.isBoardFull(board)) {
     console.log(tic.boardToString(board));
 }
 if(tic.checkWinner(board) === computerLetter){
+    console.log(tic.boardToString(board));
 	console.log("Computer won!!!");
 }
 else if (tic.checkWinner(board) === letter){
+    console.log(tic.boardToString(board));
 	console.log("Player won!!!");
 }
 else
 {
+    console.log(tic.boardToString(board));
 	console.log("It's a draw")
 }
 

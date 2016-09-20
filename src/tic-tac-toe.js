@@ -401,15 +401,15 @@ function getRandomEmptyCellIndex(board) {
 
 function checkWinner(board) {
     if (getWinnerRows(board) != undefined) {
-        console.log("here");
+        
         return getWinnerRows(board);
         
     } else if (getWinnerCols(board) != undefined) {
-        console.log("here2");
+        
         return getWinnerCols(board);
         
     } else if (getWinnerDiagonals(board) != undefined) {
-        console.log("here3");
+        
         return getWinnerDiagonals(board);
         
     } else {
